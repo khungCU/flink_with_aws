@@ -1,13 +1,13 @@
-FROM flink:1.15.2-scala_2.12
+FROM flink:1.18-scala_2.12
 
 ARG PYTHON_VERSION
-ENV PYTHON_VERSION=${PYTHON_VERSION:-3.8.10}
+ENV PYTHON_VERSION=${PYTHON_VERSION:-3.10.14}
 ARG FLINK_VERSION
-ENV FLINK_VERSION=${FLINK_VERSION:-1.15.2}
+ENV FLINK_VERSION=${FLINK_VERSION:-1.18.1}
 
-# Currently only Python 3.6, 3.7 and 3.8 are supported officially.
+# Python version (3.7, 3.8, 3.9 or 3.10) is required for PyFlink.
 RUN apt-get update -y && \
-  apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev libffi-dev && \
+  apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev libffi-dev openjdk-11-jdk-headless && \
   wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
   tar -xvf Python-${PYTHON_VERSION}.tgz && \
   cd Python-${PYTHON_VERSION} && \
@@ -19,6 +19,9 @@ RUN apt-get update -y && \
   ln -s /usr/local/bin/python3 /usr/local/bin/python && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
+
+# Installing OpenJDK again & setting this is required due to a bug with M1 Macs
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64
 
 # install PyFlink
 RUN pip3 install apache-flink==${FLINK_VERSION}
