@@ -1,10 +1,9 @@
 import os
 import json
-import re
 import logging
 
-import kafka  # check if --pyFiles works
 from pyflink.table import EnvironmentSettings, TableEnvironment
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -26,13 +25,16 @@ APPLICATION_PROPERTIES_FILE_PATH = (
     else "application_properties.json"
 )
 
+# on non-KDA, multiple jar files can be passed after being delimited by a semicolon
 if RUNTIME_ENV != "KDA":
-    # on non-KDA, multiple jar files can be passed after being delimited by a semicolon
+    print("Running local flink run time....")
     CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-    PIPELINE_JAR = "flink-sql-connector-kafka-1.15.2.jar"
+    PIPELINE_JAR = "flink-sql-connector-kafka-3.1.0-1.18.jar"
+    print(f"The pipline jar path : file://{os.path.join(CURRENT_DIR, 'package', 'lib', PIPELINE_JAR)}")
     table_env.get_config().set(
         "pipeline.jars", f"file://{os.path.join(CURRENT_DIR, 'package', 'lib', PIPELINE_JAR)}"
     )
+                                          
 logging.info(f"app properties file path - {APPLICATION_PROPERTIES_FILE_PATH}")
 
 

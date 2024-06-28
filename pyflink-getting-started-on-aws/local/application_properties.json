@@ -3,7 +3,7 @@
     "PropertyGroupId": "kinesis.analytics.flink.run.options",
     "PropertyMap": {
       "python": "processor.py",
-      "jarfile": "package/lib/flink-sql-connector-kinesis-1.15.2.jar",
+      "jarfile": "package/lib/flink-sql-connector-kafka-3.1.0-1.18",
       "pyFiles": "package/site_packages/"
     }
   },
